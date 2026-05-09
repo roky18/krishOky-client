@@ -1,67 +1,44 @@
 @import "tailwindcss";
-@plugin "daisyui"; /* ডেইজি-ইউআই সরাসরি এখানে যুক্ত হলো */
 
-/* KrishOky Global Theme Variables */
 :root {
-  /* Light Mode Colors */
-  --background: #fdfdfd;
-  --foreground: #0f172a;
+  --background: #ffffff;
+  --foreground: #020617;
   --card: #ffffff;
-  --primary: #10b981; /* Emerald Green */
-  --primary-foreground: #ffffff;
-  --secondary: #020617; /* Deep Navy */
-  --accent: #facc15; /* Amber/Yellow */
+  --primary: #10b981;
   --border: #e2e8f0;
+  --secondary: #475569;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Mode Colors */
-    --background: #020617;
-    --foreground: #f8fafc;
-    --card: #1e293b;
-    --primary: #34d399; /* ডার্ক মোডে একটু উজ্জ্বল সবুজ */
-    --primary-foreground: #020617;
-    --secondary: #0f172a;
-    --accent: #fbbf24;
-    --border: #334155;
-  }
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card: #0f172a;
+  --primary: #34d399;
+  --border: #1e293b;
+  --secondary: #94a3b8;
 }
 
-/* Tailwind v4 Theme Mapping */
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
   --color-card: var(--card);
   --color-border: var(--border);
-
-  --radius-xl: 1rem;
+  --color-secondary: var(--secondary);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  font-family: var(--font-noto-bengali), sans-serif;
+  transition: all 0.3s ease;
 }
 
-/* কাস্টম ইউটিলিটি: আপনার রিকোয়ারমেন্ট অনুযায়ী */
 @layer components {
-  /* সব কার্ডের হাইট এবং উইডথ সমান রাখার জন্য */
   .ko-card {
-    @apply bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-sm overflow-hidden transition-all duration-300;
-    height: 420px; /* ফিক্সড হাইট যাতে সব কার্ড সমান দেখায় */
-    width: 100%;
+    @apply bg-card border border-border rounded-xl shadow-sm transition-all;
   }
-
-  /* প্রফেশনাল সবুজ বাটন */
   .btn-krishoky {
-    @apply bg-primary text-primary-foreground px-6 py-2.5 rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all shadow-md;
+    @apply bg-primary text-white px-5 py-2 rounded-lg font-bold hover:opacity-90 transition-all cursor-pointer;
   }
 }

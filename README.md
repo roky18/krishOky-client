@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌿 KrishOky - Modern Krishi Solution
 
-## Getting Started
+**KrishOky** is a cutting-edge, full-stack digital platform designed to revolutionize the agricultural landscape in Bangladesh. By bridging the gap between farmers and technology, KrishOky provides a seamless ecosystem for trading agricultural products, accessing AI-driven advice, and managing farming resources.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-   **Smart Marketplace:** A responsive e-commerce experience for buying and selling authentic agricultural products.
+-   **AI Integration:** Powered by Google Gemini API to provide an AI Chatbot for farmers and automated content generation.
+-   **Role-Based Access:** Dedicated dashboards for Users and Admins to manage orders, products, and analytics.
+-   **Modern UI/UX:** A clean, professional agriculture-themed interface with full support for **Dark Mode**.
+-   **Real-time Tracking:** Order management and status tracking for a transparent supply chain.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-   **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS (v4), DaisyUI.
+-   **State Management:** TanStack Query (React Query).
+-   **Backend:** Node.js, Express.js, MongoDB (Mongoose).
+-   **Authentication:** JWT with Secure HTTP-only cookies.
+-   **Animations:** Framer Motion.
+-   **Icons:** Lucide React.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎨 Design Philosophy
+-   **Colors:** Emerald Green (Primary), Deep Navy (Secondary), Amber (Accent).
+-   **Consistency:** Unified card layouts, spacing, and typography across all devices.

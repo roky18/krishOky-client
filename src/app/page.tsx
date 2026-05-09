@@ -1,23 +1,71 @@
 "use client";
+import React from "react";
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { ArrowRight, Sprout, Users, ShoppingCart } from "lucide-react";
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <div className="p-10 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold text-primary mb-4">
-        {t("কৃষকভাইদের ডিজিটাল প্ল্যাটফর্ম", "Digital Platform for Farmers")}
-      </h1>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="py-20 px-6 text-center bg-gradient-to-b from-primary/5 to-transparent">
+        <div className="max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm mb-6 border border-primary/20">
+            <Sprout size={16} />{" "}
+            {t("কৃষকভাইদের ডিজিটাল সঙ্গী", "Digital Partner for Farmers")}
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black text-foreground mb-6 leading-tight">
+            {t(
+              "আধুনিক কৃষির পূর্ণাঙ্গ সমাধান",
+              "Complete Solution for Modern Agriculture",
+            )}
+          </h1>
+          <p className="text-foreground/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-medium">
+            {t(
+              "সরাসরি কৃষকের মাঠ থেকে তাজা ফসল কিনুন অথবা আপনার ফসলের আপডেট শেয়ার করুন আমাদের বিশাল কমিউনিটিতে।",
+              "Buy fresh crops directly from farms or share your crop updates in our massive community.",
+            )}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/shop"
+              className="btn-krishoky !py-4 !px-8 flex items-center justify-center gap-2 text-lg"
+            >
+              {t("বাজার দেখুন", "Visit Market")} <ShoppingCart size={20} />
+            </Link>
+            <Link
+              href="/community"
+              className="px-8 py-4 rounded-xl border-2 border-border font-black text-foreground hover:bg-secondary/5 transition-all flex items-center justify-center gap-2 text-lg"
+            >
+              {t("কমিউনিটিতে যোগ দিন", "Join Community")} <Users size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      <div className="ko-card p-6 h-auto!">
-        <p className="text-foreground/80 leading-relaxed">
-          {t(
-            "এখানে আপনি সব ধরণের তাজা ফসল, ফল এবং সবজির আপডেট পাবেন। সরাসরি কৃষকদের কাছ থেকে সেরা পণ্য সংগ্রহ করুন।",
-            "Get all types of fresh crops, fruits, and vegetable updates here. Collect the best products directly from farmers.",
-          )}
-        </p>
-      </div>
-    </div>
+      {/* Quick Stats or Features (Optional) */}
+      <section className="py-10 max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="ko-card p-8 text-center h-auto!">
+          <h3 className="text-3xl font-black text-primary mb-2">500+</h3>
+          <p className="font-bold text-foreground/60">
+            {t("সফল কৃষক", "Successful Farmers")}
+          </p>
+        </div>
+        <div className="ko-card p-8 text-center h-auto!">
+          <h3 className="text-3xl font-black text-primary mb-2">1200+</h3>
+          <p className="font-bold text-foreground/60">
+            {t("প্রতিদিনের ডেলিভারি", "Daily Deliveries")}
+          </p>
+        </div>
+        <div className="ko-card p-8 text-center h-auto!">
+          <h3 className="text-3xl font-black text-primary mb-2">24/7</h3>
+          <p className="font-bold text-foreground/60">
+            {t("কৃষি সহায়তা", "Agri Support")}
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

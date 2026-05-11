@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import TanstackProvider from "@/providers/TanstackProvider"; // ১. এটি ইম্পোর্ট করুন
 
 const notoBengali = Noto_Sans_Bengali({
   weight: ["400", "700"],
@@ -27,12 +28,15 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoBengali.variable} font-bengali antialiased`}
       >
-        <ThemeProvider>
-          <LanguageProvider>
-            <Navbar />
-            <main>{children}</main>
-          </LanguageProvider>
-        </ThemeProvider>
+        {/* ২. সব প্রোভাইডারের একদম উপরে TanstackProvider দিয়ে মুড়িয়ে দিন */}
+        <TanstackProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <LanguageProvider>
+              <Navbar />
+              <main>{children}</main>
+            </LanguageProvider>
+          </ThemeProvider>
+        </TanstackProvider>
       </body>
     </html>
   );

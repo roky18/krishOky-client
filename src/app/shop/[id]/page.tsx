@@ -91,7 +91,7 @@ export default function ProductDetailsPage() {
               <span
                 className={`px-4 py-1 rounded-full text-xs font-bold ${
                   product.stock > 0
-                    ? "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                    ? "bg-green-100 text-green-600 dark:bg-green-200/30 dark:text-green-400"
                     : "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
                 }`}
               >

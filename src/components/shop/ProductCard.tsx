@@ -15,8 +15,9 @@ const ProductCard = ({ product }: { product: IItem }) => {
       <div className="relative h-64 w-full overflow-hidden">
         <Image
           src={product.image || "https://placehold.co/400"}
-          alt={product.title.en}
+          alt={product.title?.en || "Product Image"}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
 

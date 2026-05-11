@@ -11,8 +11,10 @@ const Logo = () => {
           src="/KrishOky Logo.png"
           alt="KrishOky Logo"
           fill
+          priority
+          sizes="120px"
           className="object-contain group-hover:scale-110 transition-transform duration-300"
-          priority // লোগো যাতে সবার আগে লোড হয়
+          // লোগো যাতে সবার আগে লোড হয়
         />
       </div>
     </Link>

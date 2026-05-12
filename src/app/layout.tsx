@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import TanstackProvider from "@/providers/TanstackProvider"; // ১. এটি ইম্পোর্ট করুন
+import Footer from "@/components/shared/Footer";
 
 const notoBengali = Noto_Sans_Bengali({
   weight: ["400", "700"],
@@ -34,6 +35,7 @@ export default function RootLayout({
             <LanguageProvider>
               <Navbar />
               <main>{children}</main>
+              <Footer />
             </LanguageProvider>
           </ThemeProvider>
         </TanstackProvider>

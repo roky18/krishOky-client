@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Heart, MessageCircle, Share2 } from "lucide-react";
+import { Heart, MessageCircle, } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface PostProps {

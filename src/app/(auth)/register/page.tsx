@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from "react";
@@ -7,8 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Logo from "@/components/Logo";
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
-// ১. ভ্যালিডেশন স্কিমা তৈরি (Zod)
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -18,8 +19,8 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  // পাসওয়ার্ড দেখানো বা লুকানোর স্টেট
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
 
   const {
     register,
@@ -31,18 +32,22 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     console.log("Registration Data:", data);
-    // এখানে পরে আমরা axiosInstance দিয়ে এপিআই কল করবো
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-slate-50/50 dark:bg-transparent">
-      <div className="ko-card p-8 max-w-md w-full h-auto! shadow-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+    // মেইন ব্যাকগ্রাউন্ড এখন ডার্ক মোডে অটোমেটিক চেঞ্জ হবে
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-background transition-colors duration-300">
+      <div className="ko-card p-8 max-w-md w-full shadow-xl border border-border">
         
         {/* Logo & Header */}
         <div className="flex flex-col items-center mb-8">
           <Logo />
-          <h2 className="text-2xl font-bold text-secondary dark:text-white mt-4">Create Account</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm text-center">Join KrishOky and start your journey</p>
+          <h2 className="text-2xl font-black text-foreground mt-4">
+            {t("অ্যাকাউন্ট তৈরি করুন", "Create Account")}
+          </h2>
+          <p className="text-foreground/60 text-sm font-medium text-center">
+            {t("কৃষক্যের সাথে আপনার যাত্রা শুরু করুন", "Join KrishOky and start your journey")}
+          </p>
         </div>
 
         {/* Registration Form */}
@@ -51,63 +56,63 @@ export default function RegisterPage() {
           {/* Full Name Field */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text font-semibold flex items-center gap-2">
-                <User size={16} className="text-primary" /> Full Name
+              <span className="label-text font-black flex items-center gap-2 text-foreground/80 text-sm py-2 uppercase tracking-wider">
+                <User size={16} className="text-primary" /> {t("পুরো নাম", "Full Name")}
               </span>
             </label>
             <input
               type="text"
-              placeholder="Your Name"
-              className={`input input-bordered w-full focus:outline-primary ${errors.name ? "border-red-500" : ""}`}
+              placeholder={t("আপনার নাম", "Your Name")}
+              className={`input px-3 py-2 input-bordered w-full border rounded-md bg-background text-foreground focus:outline-primary ${errors.name ? "border-red-500" : "border-border"}`}
               {...register("name")}
             />
             {errors.name && (
-              <span className="text-red-500 text-xs mt-1">{errors.name.message}</span>
+              <span className="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tight">{errors.name.message}</span>
             )}
           </div>
 
           {/* Email Field */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text font-semibold flex items-center gap-2">
-                <Mail size={16} className="text-primary" /> Email Address
+              <span className="label-text  font-black flex items-center gap-2 text-foreground/80 text-sm py-2 uppercase tracking-wider">
+                <Mail size={16} className="text-primary" /> {t("ইমেইল ঠিকানা", "Email Address")}
               </span>
             </label>
             <input
               type="email"
               placeholder="example@mail.com"
-              className={`input input-bordered w-full focus:outline-primary ${errors.email ? "border-red-500" : ""}`}
+              className={`input px-3 py-2 input-bordered w-full border rounded-md bg-background text-foreground focus:outline-primary ${errors.email ? "border-red-500" : "border-border"}`}
               {...register("email")}
             />
             {errors.email && (
-              <span className="text-red-500 text-xs mt-1">{errors.email.message}</span>
+              <span className="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tight">{errors.email.message}</span>
             )}
           </div>
 
-          {/* Password Field with Show/Hide Toggle */}
+          {/* Password Field */}
           <div className="form-control w-full">
             <label className="label">
-              <span className="label-text font-semibold flex items-center gap-2">
-                <Lock size={16} className="text-primary" /> Password
+              <span className="label-text py-2 font-black flex items-center gap-2 text-foreground/80 text-sm uppercase tracking-wider">
+                <Lock size={16} className="text-primary" /> {t("পাসওয়ার্ড", "Password")}
               </span>
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className={`input input-bordered w-full focus:outline-primary pr-10 ${errors.password ? "border-red-500" : ""}`}
+                className={`input px-3 py-2 input-bordered w-full border rounded-md bg-background text-foreground focus:outline-primary pr-10 ${errors.password ? "border-red-500" : "border-border"}`}
                 {...register("password")}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/40 hover:text-primary transition-colors"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             {errors.password && (
-              <span className="text-red-500 text-xs mt-1">{errors.password.message}</span>
+              <span className="text-red-500 text-[10px] font-bold mt-1 uppercase tracking-tight">{errors.password.message}</span>
             )}
           </div>
 
@@ -115,19 +120,19 @@ export default function RegisterPage() {
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="btn-krishoky w-full flex items-center justify-center gap-2 group mt-2"
+            className="btn-krishoky w-full flex items-center justify-center gap-2 group mt-2 bg-primary text-white font-black py-3 rounded-lg shadow-lg hover:shadow-primary/30 transition-all"
           >
-            {isSubmitting ? "Creating account..." : "Register Now"}
+            {isSubmitting ? t("অ্যাকাউন্ট তৈরি হচ্ছে...", "Creating account...") : t("রেজিস্ট্রেশন করুন", "Register Now")}
             {!isSubmitting && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
           </button>
         </form>
 
         {/* Login Link */}
-        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center text-sm">
-          <p className="text-gray-500 dark:text-gray-400">
-            Already have an account?{" "}
-            <Link href="/login" className="text-primary font-bold hover:underline">
-              Login here
+        <div className="mt-8 pt-6 border-t border-border text-center text-sm">
+          <p className="text-foreground/50 font-bold">
+            {t("ইতিমধ্যে অ্যাকাউন্ট আছে?", "Already have an account?")}{" "}
+            <Link href="/login" className="text-primary font-black hover:underline uppercase tracking-tighter">
+              {t("লগইন করুন", "Login here")}
             </Link>
           </p>
         </div>

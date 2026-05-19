@@ -11,6 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -161,6 +162,13 @@ export default function LoginPage() {
                 className="group-hover:translate-x-1 transition-transform"
               />
             )}
+          </button>
+          <button
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+            className="w-full bg-card hover:bg-primary/5 text-foreground border border-border/80 py-4 rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-3 cursor-pointer text-sm"
+          >
+            <FcGoogle className="text-red-500 animate-pulse" size={20} />
+            <span>Sign in with Google</span>
           </button>
         </form>
 

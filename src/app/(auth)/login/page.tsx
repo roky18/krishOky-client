@@ -9,6 +9,9 @@ import Logo from "@/components/Logo";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -26,16 +29,48 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    mode: "onChange",
   });
 
+  const router = useRouter();
+
   const onSubmit = async (data: LoginFormValues) => {
-    console.log("Login Data:", data);
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+      console.log("NextAuth Result Check:", result);
+      // যদি ব্যাকএন্ড বা NextAuth কোনো এরর দেয় (যেমন: পাসওয়ার্ড ভুল)
+      if (result?.error) {
+        // NextAuth ভুল লগইনের জন্য ডিফল্টভাবে 'CredentialsSignin' এরর দেয়
+        if (result.error === "CredentialsSignin") {
+          alert("ভুল ইমেইল অথবা পাসওয়ার্ড দিয়েছেন। আবার চেষ্টা করুন।");
+        } else {
+          alert("লগইন করতে সমস্যা হচ্ছে। পরে চেষ্টা করুন।");
+        }
+        return; // ফাংশন এখানেই স্টপ হয়ে যাবে
+      }
+
+      console.log("NextAuth Login Success:", result);
+      alert("লগইন সফল হয়েছে! 🎉");
+
+      // লগইন সফল হলে ইউজারকে HOme নিয়ে যাবে
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      // টাইপস্ক্রিপ্টকে বোঝানোর জন্য একটি কাস্টম টাইপ কাস্টিং করে নেওয়া
+      const errorMessage =
+        error instanceof Error ? error.message : "ভুল হয়েছে।";
+      console.error("❌ লগইন এরর:", errorMessage);
+      alert(errorMessage || "ইমেইল বা পাসওয়ারড ভুল হয়েছে।");
+    }
   };
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 bg-background transition-colors duration-300">
       <div className="ko-card p-8 max-w-md w-full shadow-xl border border-border">
-        
         {/* Logo & Header */}
         <div className="flex flex-col items-center mb-8">
           <Logo />
@@ -43,7 +78,10 @@ export default function LoginPage() {
             {t("ফিরে আসার জন্য ধন্যবাদ", "Welcome Back")}
           </h2>
           <p className="text-foreground/60 text-sm font-medium text-center">
-            {t("লগইন করতে আপনার তথ্য দিন", "Please enter your details to login")}
+            {t(
+              "লগইন করতে আপনার তথ্য দিন",
+              "Please enter your details to login",
+            )}
           </p>
         </div>
 
@@ -52,7 +90,8 @@ export default function LoginPage() {
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text font-black flex items-center gap-2 text-foreground/80 text-sm py-2 uppercase tracking-wider">
-                <Mail size={16} className="text-primary" /> {t("ইমেইল ঠিকানা", "Email Address")}
+                <Mail size={16} className="text-primary" />{" "}
+                {t("ইমেইল ঠিকানা", "Email Address")}
               </span>
             </label>
             <input
@@ -72,7 +111,8 @@ export default function LoginPage() {
           <div className="form-control w-full">
             <label className="label">
               <span className="label-text font-black flex items-center gap-2 text-foreground/80 text-sm py-2 uppercase tracking-wider">
-                <Lock size={16} className="text-primary" /> {t("পাসওয়ার্ড", "Password")}
+                <Lock size={16} className="text-primary" />{" "}
+                {t("পাসওয়ার্ড", "Password")}
               </span>
             </label>
             <div className="relative">
@@ -95,7 +135,7 @@ export default function LoginPage() {
                 {errors.password.message}
               </span>
             )}
-            
+
             <label className="label justify-end py-1">
               <Link
                 href="#"
@@ -112,7 +152,9 @@ export default function LoginPage() {
             disabled={isSubmitting}
             className="btn-krishoky w-full flex items-center justify-center gap-2 group mt-2 bg-primary text-white font-black py-3 rounded-lg shadow-lg hover:shadow-primary/30 transition-all"
           >
-            {isSubmitting ? t("লগইন হচ্ছে...", "Logging in...") : t("লগইন করুন", "Login Now")}
+            {isSubmitting
+              ? t("লগইন হচ্ছে...", "Logging in...")
+              : t("লগইন করুন", "Login Now")}
             {!isSubmitting && (
               <ArrowRight
                 size={18}

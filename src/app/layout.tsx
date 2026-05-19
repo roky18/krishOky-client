@@ -30,6 +30,7 @@ export default function RootLayout({
         className={`${inter.variable} ${notoBengali.variable} font-bengali antialiased`}
       >
         {/* ২. সব প্রোভাইডারের একদম উপরে TanstackProvider দিয়ে মুড়িয়ে দিন */}
+
         <TanstackProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <LanguageProvider>

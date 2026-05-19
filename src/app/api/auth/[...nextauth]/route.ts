@@ -6,7 +6,8 @@ interface CustomUser extends User {
   id: string;
   email: string;
   name: string;
-  token?: string; // যদি আপনার ব্যাকএন্ড থেকে JWT টোকেন আসে
+  image?: string | null;
+  token?: string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -33,34 +34,49 @@ export const authOptions: NextAuthOptions = {
             },
           );
 
-          const user = await res.json();
+          const responseData = await res.json();
 
-          // যদি ব্যাকএন্ড সাকসেস রেসপন্স দেয়
-          if (res.ok && user) {
-            return user as CustomUser;
+          // ✅ ২. ব্যাকএন্ডের পাঠানো ডাটা চেক করা হচ্ছে
+          if (res.ok && responseData && responseData.data) {
+            const loginData = responseData.data; // এর ভেতর accessToken এবং user আছে
+            const backendUser = loginData.user; // ব্যাকএন্ডের পাঠানো আসল ইউজার অবজেক্ট
+
+            // 🎯 ৩. এখানে ম্যাপ করা হলো যাতে ডাটাবেজের আসল নামটাই সেশনে যায়
+            return {
+              id: backendUser?._id || backendUser?.id || credentials.email,
+              name:
+                backendUser?.name ||
+                credentials.email.split("@")[0].toUpperCase(), // 🧠 ব্যাকএন্ডে নাম থাকলে সেটাই নিবে, মিস করলে ফলব্যাক
+              email: backendUser?.email || credentials.email,
+              image: backendUser?.image || null,
+              token: loginData.accessToken,
+            } as CustomUser;
           }
 
-          // 👇 যদি পাসওয়ার্ড বা ইমেইল ভুল হয়, সরাসরি null দিন। কোনো এরর থ্রো করার দরকার নেই!
           return null;
         } catch (error) {
-          // ব্যাকএন্ড সার্ভার যদি পুরোপুরি বন্ধ থাকে বা নেটওয়ার্ক এরর হয়
+          console.error("NextAuth Auth Error:", error);
           return null;
         }
       },
     }),
   ],
   callbacks: {
-    // ২. jwt এবং session কলব্যাকে any-এর বদলে সঠিক টাইপ ব্যবহার করা
     async jwt({ token, user }) {
       if (user) {
-        token.user = user as CustomUser;
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image || null;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token.user) {
-        // এখানে any-এর বদলে explicit টাইপ অ্যাসাইন করা হয়েছে
-        session.user = token.user as CustomUser;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = (token.image as string) || null;
       }
       return session;
     },

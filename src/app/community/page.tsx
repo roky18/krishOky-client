@@ -1,69 +1,94 @@
 "use client";
+
 import { useQuery } from "@tanstack/react-query";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { getAllPosts } from "@/services/communityApi";
 import { IPost } from "@/interfaces/communityInterface";
 import CommunityBanner from "@/components/community/CommunityBanner";
 import PostCard from "@/components/community/PostCard";
 import PostInput from "@/components/community/PostInput";
-import { Loader2, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+
+type PostsResponse =
+  | IPost[]
+  | {
+      data?: IPost[] | { posts?: IPost[] };
+      posts?: IPost[];
+    };
+
+const normalizePosts = (response?: PostsResponse): IPost[] => {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (Array.isArray(response.posts)) return response.posts;
+  if (Array.isArray(response.data)) return response.data;
+  if (Array.isArray(response.data?.posts)) return response.data.posts;
+  return [];
+};
 
 export default function CommunityPage() {
-  // TanStack Query দিয়ে ডাটা ফেচ করা
-  const { data, isLoading, error } = useQuery<{ data: IPost[] }>({
+  const { t } = useLanguage();
+
+  const { data, isLoading, error } = useQuery<PostsResponse>({
     queryKey: ["community-posts"],
     queryFn: getAllPosts,
   });
 
-  // ১. লোডিং স্টেট
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader2 className="animate-spin w-12 h-12 text-emerald-500" />
-      </div>
-    );
+  const posts = normalizePosts(data);
 
-  // ২. এরর স্টেট
-  if (error)
+  if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen text-red-500">
-        <AlertCircle className="w-12 h-12 mb-2" />
-        <p>ডাটা লোড করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।</p>
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-emerald-500" />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center px-4 text-center text-red-500">
+        <AlertCircle className="mb-2 h-12 w-12" />
+        <p className="font-bold">
+          {t(
+            "ডাটা লোড করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।",
+            "Failed to load community posts. Please try again.",
+          )}
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <main className="max-w-6xl mx-auto p-6 md:p-10 transition-all duration-300">
+    <main className="mx-auto max-w-6xl p-6 transition-all duration-300 md:p-10">
       <CommunityBanner />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-8">
-        {/* মেইন কন্টেন্ট */}
+      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <PostInput />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {data?.data && data.data.length > 0 ? (
-              data.data.map((post: IPost) => (
-                <PostCard key={post._id} post={post} />
-              ))
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {posts.length > 0 ? (
+              posts.map((post) => <PostCard key={post._id} post={post} />)
             ) : (
-              <div className="col-span-2 text-center py-10 text-slate-500 dark:text-slate-400">
-                কোনো পোস্ট পাওয়া যায়নি। প্রথম পোস্টটি আপনিই করুন! 🌾
+              <div className="col-span-full rounded-xl border border-border bg-card px-6 py-10 text-center text-foreground/60">
+                {t(
+                  "কোনো পোস্ট পাওয়া যায়নি। প্রথম পোস্টটি আপনিই করুন!",
+                  "No posts found. Be the first to share an update!",
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {/* সাইডবার */}
         <aside className="hidden lg:block">
-          <div className="bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-6 rounded-3xl border border-slate-200 dark:border-slate-800 sticky top-28 shadow-sm">
-            <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-800 pb-2">
-              Trending Topics
+          <div className="sticky top-28 rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h4 className="mb-4 border-b border-border pb-2 text-lg font-black text-foreground">
+              {t("জনপ্রিয় বিষয়", "Trending Topics")}
             </h4>
             <div className="space-y-3">
-              <p className="text-sm font-semibold text-emerald-600 cursor-pointer hover:underline">
+              <p className="cursor-pointer text-sm font-semibold text-emerald-600 hover:underline dark:text-emerald-400">
                 #OrganicFarming
               </p>
-              <p className="text-sm font-semibold text-emerald-600 cursor-pointer hover:underline">
+              <p className="cursor-pointer text-sm font-semibold text-emerald-600 hover:underline dark:text-emerald-400">
                 #AgriculturalAdvice
               </p>
             </div>

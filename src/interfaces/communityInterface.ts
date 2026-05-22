@@ -5,12 +5,12 @@ export interface IPost {
   desc: string;
   type: string;
   img?: string;
-  createdAt?: Date;
-  // নতুন ফিল্ডগুলো এখানে যোগ করুন
+  createdAt?: string | Date;
+
   likes?: string[];
   comments?: {
     user: string;
     text: string;
-    createdAt: Date;
+    createdAt: string | Date;
   }[];
 }

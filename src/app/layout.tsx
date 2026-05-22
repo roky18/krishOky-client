@@ -8,6 +8,7 @@ import TanstackProvider from "@/providers/TanstackProvider"; // ১. এটি �
 import Footer from "@/components/shared/Footer";
 import AIChatbot from "@/components/shared/AIChatbot";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const notoBengali = Noto_Sans_Bengali({
   weight: ["400", "700"],
@@ -35,15 +36,17 @@ export default function RootLayout({
 
         <TanstackProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <LanguageProvider>
-              <CartProvider>
-                <Navbar />
-                <main>
-                  {children} <AIChatbot />
-                </main>
-                <Footer />
-              </CartProvider>
-            </LanguageProvider>
+            <AuthProvider>
+              <LanguageProvider>
+                <CartProvider>
+                  <Navbar />
+                  <main>
+                    {children} <AIChatbot />
+                  </main>
+                  <Footer />
+                </CartProvider>
+              </LanguageProvider>
+            </AuthProvider>
           </ThemeProvider>
         </TanstackProvider>
       </body>

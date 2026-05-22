@@ -70,53 +70,36 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function ShopPage() {
   const { t } = useLanguage();
 
-  // 🛠️ ফিক্স ১: স্টেটগুলোর ডিফল্ট ভ্যালু একদম ক্লিন করা হলো (কোনো স্পেস থাকবে না)
+  // ফিল্টার এবং সার্চ স্টেটসমূহ
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [sort, setSort] = useState<string>("");
   const [page, setPage] = useState<number>(1);
 
-  // TanStack Query: ফিল্টার চেঞ্জ হলে রিয়েল-টাইমে ডাটা কল হবে
+  // TanStack Query ডাটা ফেচিং
   const { data, isLoading, isError } = useQuery({
     queryKey: ["items", searchTerm, category, sort, page],
     queryFn: () => getAllItems({ searchTerm, category, sort, page, limit: 8 }),
   });
 
-  // 🛠️ ফিক্স ২: any ছাড়া ১০০% টাইপ-সেফ ডাবল কাস্টিং স্ট্রাকচার
+  // টাইপ-সেফ ডাটা কাস্টিং
   const responseData = data as unknown as {
-    success?: boolean;
-    message?: string;
     items?: IItem[];
-    meta?: {
-      page: number;
-      limit: number;
-      total: number;
-      totalPage: number;
-    };
+    meta?: { page: number; limit: number; total: number; totalPage: number };
     data?: {
       items?: IItem[];
-      meta?: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPage: number;
-      };
+      meta?: { page: number; limit: number; total: number; totalPage: number };
     };
   };
 
-  // 🛠️ ফিক্স ৩: ডাটা এক্সট্র্যাকশন লেয়ার রিম্যাপ (আপনার এপিআই রেসপন্সের সব কন্ডিশন হ্যান্ডেলড)
   const products: IItem[] =
-    responseData?.items ||
-    responseData?.data?.items ||
-    (data as unknown as { data?: IItem[] })?.data ||
-    [];
-
+    responseData?.items || responseData?.data?.items || [];
   const meta = responseData?.meta ||
     responseData?.data?.meta || { totalPage: 1 };
 
   if (isError) {
     return (
-      <div className="text-center py-20 text-red-500 font-bold bg-white/5 border border-white/10 rounded-xl max-w-md mx-auto my-10 p-4 backdrop-blur-md">
+      <div className="text-center py-20 text-red-500 font-bold bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl max-w-md mx-auto my-10 p-4">
         {t(
           "পণ্য লোড করতে সমস্যা হচ্ছে। দয়া করে আবার চেষ্টা করুন।",
           "Failed to load products. Please try again.",
@@ -126,8 +109,9 @@ export default function ShopPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50/10 via-zinc-50 to-emerald-50/5 dark:from-zinc-950 dark:via-zinc-900 dark:to-stone-950 pt-28 pb-16 px-4 max-w-7xl mx-auto">
-      {/* ফিল্টার হেডার কম্পোনেন্ট */}
+    /* 🛠️ FIX: dark:via-zinc-900 যুক্ত করা হয়েছে যাতে গ্রেডিয়েন্ট ডার্ক মোডে সাদা না হয়ে কুচকুচে ডার্ক থিম ধরে রাখে */
+    <main className="min-h-screen pt-28 pb-16 px-4 max-w-7xl mx-auto transition-colors duration-300">
+      {/* ফিল্টার হেডার */}
       <ShopHeader
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -138,23 +122,21 @@ export default function ShopPage() {
         setPage={setPage}
       />
 
-      {/* লোডিং অবস্থা (Premium Glassmorphism Skeleton) */}
+      {/* কন্টেন্ট গ্রিড এবং প্রিমিয়াম লোডিং স্কেলিটন */}
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div
               key={i}
-              className="h-96 w-full animate-pulse bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/5 rounded-2xl backdrop-blur-xl shadow-lg"
+              className="h-96 w-full animate-pulse bg-zinc-200/50 dark:bg-white/5 border border-zinc-300/40 dark:border-white/5 rounded-2xl shadow-sm backdrop-blur-xl"
             />
           ))}
         </div>
       ) : products.length === 0 ? (
-        /* ডাটা ফাঁকা থাকলে ক্লিন মেসেজ */
-        <div className="text-center py-32 text-gray-500 dark:text-gray-400 text-lg font-medium bg-white/5 dark:bg-black/10 backdrop-blur-md border border-white/10 rounded-2xl shadow-inner">
-          {t("কোনো পণ্য পাওয়া যায়নি!", "No products found!")}
+        <div className="text-center py-32 text-zinc-400 dark:text-zinc-500 text-lg font-medium bg-white/50 dark:bg-black/20 border border-zinc-200 dark:border-white/10 rounded-2xl shadow-sm backdrop-blur-md">
+          {t("কোনো পণ্য পাওয়া যায়নি!", "No products found!")}
         </div>
       ) : (
-        /* রিয়েল প্রোডাক্ট গ্রিড */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((item: IItem) => (
             <ProductCard key={item._id} product={item} />
@@ -171,12 +153,12 @@ export default function ShopPage() {
               setPage((prev) => prev - 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/5 disabled:opacity-30 hover:bg-green-500/20 text-gray-800 dark:text-white transition-all shadow-md backdrop-blur-sm"
+            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
           >
             {t("পূর্ববর্তী", "Previous")}
           </button>
 
-          <span className="text-sm font-semibold text-gray-600 dark:text-gray-400 bg-white/5 px-4 py-2 rounded-lg border border-white/10 backdrop-blur-sm">
+          <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 backdrop-blur-sm shadow-sm">
             {page} / {meta.totalPage}
           </span>
 
@@ -186,7 +168,7 @@ export default function ShopPage() {
               setPage((prev) => prev + 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white/10 dark:bg-black/20 border border-white/20 dark:border-white/5 disabled:opacity-30 hover:bg-green-500/20 text-gray-800 dark:text-white transition-all shadow-md backdrop-blur-sm"
+            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
           >
             {t("পরবর্তী", "Next")}
           </button>

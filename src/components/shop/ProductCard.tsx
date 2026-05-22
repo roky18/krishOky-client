@@ -10,7 +10,7 @@ const ProductCard = ({ product }: { product: IItem }) => {
   const { t } = useLanguage();
 
   return (
-    <div className="group relative bg-card border border-border/50 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-2">
+    <div className="group relative shadow-md border border-border/50 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-2">
       {/* ইমেজ সেকশন - প্রিমিয়াম ওভারলে সহ */}
       <div className="relative h-64 w-full overflow-hidden">
         <Image

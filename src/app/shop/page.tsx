@@ -153,12 +153,12 @@ export default function ShopPage() {
               setPage((prev) => prev - 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
+            className="px-5 py-2.5 text-sm font-medium rounded-xl  bg-zinc-800  text-zinc-100 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
           >
             {t("পূর্ববর্তী", "Previous")}
           </button>
 
-          <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 backdrop-blur-sm shadow-sm">
+          <span className="text-sm font-semibold   px-4 py-2 rounded-lg  pt-3 bg-primary dark:bg-zinc-700 text-white dark:text-gray-100 backdrop-blur-sm shadow-md">
             {page} / {meta.totalPage}
           </span>
 
@@ -168,7 +168,7 @@ export default function ShopPage() {
               setPage((prev) => prev + 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
+            className="px-5 py-2.5 text-sm font-medium rounded-xl  bg-zinc-800  text-zinc-100 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-all shadow-md backdrop-blur-sm"
           >
             {t("পরবর্তী", "Next")}
           </button>

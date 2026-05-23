@@ -9,9 +9,9 @@ export const generateAIContent = async (title: string) => {
 };
 
 // ২. চ্যাটবট মেসেজের জন্য
-export const askAIChatbot = async (prompt: string) => {
+export const askAIChatbot = async (message: string) => {
   const { data } = await axiosInstance.post("/ai/chat", {
-    prompt,
+    message,
   });
   return data.data.reply;
 };

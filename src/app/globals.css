@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #020617;
@@ -58,3 +60,5 @@ body {
 .animate-loading-bar {
   animation: loading-bar 2s infinite ease-in-out;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

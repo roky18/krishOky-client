@@ -34,6 +34,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     accessToken: string;
+    role?: string;
     image?: string | null;
     name?: string | null;
     email?: string | null;
@@ -45,6 +46,7 @@ interface CustomUser extends User {
   email: string;
   name: string;
   image?: string | null;
+  role?: string;
   token?: string;
 }
 
@@ -90,6 +92,7 @@ export const authOptions: NextAuthOptions = {
                 credentials.email.split("@")[0].toUpperCase(),
               email: backendUser?.email || credentials.email,
               image: backendUser?.image || null,
+              role: backendUser?.role || "user",
               token: loginData.accessToken,
             } as CustomUser;
           }
@@ -152,6 +155,7 @@ export const authOptions: NextAuthOptions = {
         token.name = customUser.name;
         token.email = customUser.email;
         token.image = customUser.image || null;
+        token.role = customUser.role || "user";
         token.accessToken = customUser.token || "";
       }
       if (account?.provider === "google" && account.backendUser) {
@@ -160,6 +164,7 @@ export const authOptions: NextAuthOptions = {
         token.name = bUser.name;
         token.email = bUser.email;
         token.image = bUser.image || null;
+        token.role = bUser.role || "user";
         token.accessToken = account.accessToken || "";
       }
       return token;
@@ -172,6 +177,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name || "";
         session.user.email = token.email || "";
         session.user.image = token.image || null;
+        session.user.role = token.role || "user";
         session.accessToken = token.accessToken || "";
       }
       return session;

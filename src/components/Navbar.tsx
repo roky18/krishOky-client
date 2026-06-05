@@ -230,13 +230,14 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSession, signOut } from "next-auth/react";
-import { Languages, Menu, Moon, Sun, X, User, LogOut } from "lucide-react";
+import { Languages, Menu, Moon, Sun, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import Logo from "./Logo";
 
 type StoredUser = {
   name?: string | null;
   email?: string | null;
   image?: string | null;
+  role?: string | null;
 };
 
 // ডিফল্ট অবতার: জিমেইলের ইমেজ কোনো কারণে লোড না হলে বা না থাকলে এই সুন্দর অবতারটি দেখাবে
@@ -294,6 +295,9 @@ const Navbar = () => {
     { name: t("শপ", "Shop"), path: "/shop" },
     { name: t("আমাদের সম্পর্কে", "About"), path: "/about" },
   ];
+  const navLinks = isLoggedIn
+    ? [...publicLinks, { name: t("ড্যাশবোর্ড", "Dashboard"), path: "/dashboard" }]
+    : publicLinks;
 
   const isActiveLink = (path: string) =>
     path === "/" ? pathname === path : pathname.startsWith(path);
@@ -315,7 +319,7 @@ const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
-          {publicLinks.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.path}
               href={link.path}
@@ -362,6 +366,15 @@ const Navbar = () => {
                       <p className="text-sm font-black text-foreground truncate">{user.name || "KrishOky User"}</p>
                       <p className="text-xs text-foreground/60 truncate">{user.email}</p>
                     </div>
+
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-foreground hover:bg-secondary/20 transition-colors"
+                    >
+                      <LayoutDashboard size={16} className="text-primary" />
+                      {t("ড্যাশবোর্ড", "Dashboard")}
+                    </Link>
 
                     <Link
                       href="/profile"
@@ -413,7 +426,7 @@ const Navbar = () => {
       {/* Mobile Menu Content */}
       {isOpen && (
         <div className="md:hidden bg-background border-b border-border p-5 space-y-4">
-          {publicLinks.map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.path}
               href={link.path}
